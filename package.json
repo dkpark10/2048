@@ -7,7 +7,7 @@
     "start": "webpack serve --mode development",
     "prebuild": "rimraf dist",
     "build": "webpack --progress --mode production",
-    "servestart": "node server.js"
+    "server": "node server.js"
   },
   "author": "dkpark10",
   "license": "ISC",

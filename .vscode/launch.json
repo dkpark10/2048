@@ -22,7 +22,8 @@
       "request": "launch",
       "name": "run react debugger",
       "url": "http://localhost:3010",
-      "webRoot": "${workspaceFolder}/src",
+      "sourceMaps": true,
+      "webRoot": "${workspaceFolder}",
     },
     {
       "type": "node",
