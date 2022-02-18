@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface Props {
   backColor: string;
-  fontSize: string; 
+  fontSize: string;
   children: any;
 }
 
@@ -20,10 +20,10 @@ const CellStyle = styled.div<Props>`
 
   &{
     color:white;
-    font-size:${({fontSize}) => fontSize};
+    font-size:${({ fontSize }) => fontSize};
     font-weight:bold;
   }
-`
+`;
 
 export default function Tile({
   backColor,
@@ -33,6 +33,7 @@ export default function Tile({
   return (
     <>
       <CellStyle
+        className={'cell'}
         backColor={backColor}
         fontSize={fontSize}
       >

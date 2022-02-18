@@ -11,6 +11,38 @@ const getInitValue = () => {
   return Math.floor(Math.random() * 15) < 14 ? 2 : 4;
 }
 
+const isGameOver = (board: number[][]): boolean => {
+
+  const diry: number[] = [0, 0, 1, -1];
+  const dirx: number[] = [1, -1, 0, 0];
+
+  const isOutRange = (y: number, x: number): boolean => {
+    return y < 0 || x < 0 || y >= BOARD_SIZE || x >= BOARD_SIZE;
+  }
+
+  for (let row = 0; row < BOARD_SIZE; row++) {
+    for (let col = 0; col < BOARD_SIZE; col++) {
+      if (board[row][col] === 0) {
+        return false;
+      }
+
+      for (let i = 0; i < 4; i++) {
+        const nextY = diry[i] + row;
+        const nextX = dirx[i] + col;
+
+        if (isOutRange(nextY, nextX)) {
+          continue;
+        }
+
+        if (board[row][col] === board[nextY][nextX]) {
+          return false;
+        }
+      }
+    }
+  }
+  return true;
+}
+
 const makeTile = (board: number[][], cnt: number) => {
 
   const noTileList: number[] = [];
@@ -57,4 +89,4 @@ const moveTile = (board: number[][], dir: string): ITileResult => {
   }
 }
 
-export { makeTile, moveTile };
+export { makeTile, moveTile, isGameOver };
