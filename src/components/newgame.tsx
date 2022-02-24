@@ -40,10 +40,10 @@ export default function NewGameButton({ onKeyDown, onReset }: INewGameButton) {
         <NewGameInput
           ref={newGameRef}
           name='keypress'
-          onKeyDown={onKeyDown}
           onBlur={e => newGameRef.current.focus()}
           value={'New Game'}
           onClick={onReset}
+          onKeyDown={onKeyDown}
         />
       </div>
     </>

@@ -6,9 +6,14 @@ import { ITileResult } from './move_tile';
 
 const BOARD_SIZE = 4 as const;
 
-// 15번중 한번은 4값으로 나오게
-const getInitValue = () => {
-  return Math.floor(Math.random() * 15) < 14 ? 2 : 4;
+const isFullBoard = (board: number[][]): boolean => {
+  const count = board.reduce((rowAcc, row) => {
+    return rowAcc += row.reduce((colAcc, col) => {
+      return colAcc += col !== 0 ? 1 : 0;
+    }, 0);
+  }, 0);
+
+  return count === BOARD_SIZE ** 2 ? true : false;
 }
 
 const isGameOver = (board: number[][]): boolean => {
@@ -41,6 +46,11 @@ const isGameOver = (board: number[][]): boolean => {
     }
   }
   return true;
+}
+
+// 15번중 한번은 4값으로 나오게
+const getInitValue = () => {
+  return Math.floor(Math.random() * 15) < 14 ? 2 : 4;
 }
 
 const makeTile = (board: number[][], cnt: number) => {
@@ -89,4 +99,4 @@ const moveTile = (board: number[][], dir: string): ITileResult => {
   }
 }
 
-export { makeTile, moveTile, isGameOver };
+export { makeTile, moveTile, isGameOver, isFullBoard };
