@@ -13,5 +13,5 @@ export default function App() {
   const init = Array.from(Array(4), () => Array(4).fill(0));
   makeTile(init, 2);
 
-  return <Game2048 initBoard={gameOverBoard} />
+  return <Game2048 initBoard={init} />
 }
