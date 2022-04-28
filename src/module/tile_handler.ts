@@ -81,19 +81,19 @@ const moveTile = (board: number[][], dir: string): ITileResult => {
 
   switch (dir) {
     case 'ArrowRight':
-      return new RightMoveTileHandler(board)
+      return new RightMoveTileHandler(board, 0)
         .move()
         .getResult();
     case 'ArrowLeft':
-      return new LeftMoveTileHandler(board)
+      return new LeftMoveTileHandler(board, 1)
         .move()
         .getResult();
     case 'ArrowUp':
-      return new UpMoveTileHandler(board)
+      return new UpMoveTileHandler(board, 2)
         .move()
         .getResult();
     case 'ArrowDown':
-      return new DownMoveTileHandler(board)
+      return new DownMoveTileHandler(board, 3)
         .move()
         .getResult();
   }
