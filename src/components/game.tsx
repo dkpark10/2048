@@ -1,22 +1,27 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { makeTile, moveTile, isGameOver, isFullBoard } from '../module/tile_handler';
-import { ITileResult } from '../module/move_tile';
+import { ITileResult, MoveTileInfo } from '../module/move_tile';
 
 import Tile from './tile';
 import NewGameButton from './newgame';
 import Score from './score';
 import Modal from './modal';
 
-const Wrapper2048 = styled.div`
+interface Props {
+  initBoard: number[][];
+  initDistance: MoveTileInfo[][];
+}
+
+const Wrapper2048 = styled.main`
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  padding:20px;
+  border-radius:6px;
   background-color: #2e2d2d;
   box-shadow: 4px 4px 10px #272626;
-  border-radius:6px;
-  padding:20px;
 `;
 
 const BoardWrapper = styled.div`
@@ -27,15 +32,15 @@ const BoardWrapper = styled.div`
   gap: 6px;
 `;
 
-interface Props {
-  initBoard: number[][];
-}
-
-export default function Game2048({ initBoard }: Props) {
+export default function Game2048({
+  initBoard,
+  initDistance
+}: Props) {
 
   const [board, setBoard] = useState<number[][]>(initBoard);
   const [score, setScore] = useState<number>(0);
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [moveTileDistance, setMoveTileDistance] = useState<MoveTileInfo[][]>(initDistance);
 
   const ref = useRef(null);
   useEffect(() => {
@@ -56,6 +61,7 @@ export default function Game2048({ initBoard }: Props) {
     if (JSON.stringify(result.board) !== JSON.stringify(board)) {
       makeTile(result.board, 1);
       setBoard([...result.board]);
+      setMoveTileDistance([...result.moveInfo]);
       setScore(prev => prev + result.score);
 
       if (isFullBoard(result.board) && isGameOver(result.board)) {
@@ -80,16 +86,14 @@ export default function Game2048({ initBoard }: Props) {
       <Wrapper2048>
         <Score score={score} />
         <BoardWrapper >
-          {board.map((row, rowIdx) => {
-            return row.map((value, colIdx) => {
+          {board.map((row, rowidx) => {
+            return row.map((value, colidx) => {
               return (
                 <Tile
-                  ref={ref}
-                  key={rowIdx * 4 + colIdx}
+                  key={rowidx * 4 + colidx}
                   value={value}
-                >
-                  {value !== 0 ? value : ''}
-                </Tile>
+                  distance={moveTileDistance[rowidx][colidx]}
+                />
               )
             })
           })}

@@ -1,22 +1,33 @@
-import React, { forwardRef } from 'react';
+import React, { useRef, forwardRef, useEffect } from 'react';
 import styled from 'styled-components';
 import tileData from '../module/tile_color';
+import { Timeline, Tween } from 'react-gsap';
+import { MoveTileInfo } from '../module/move_tile';
 
 interface Props {
   value: number;
-  children: any;
+  distance: MoveTileInfo;
 }
 
-const CellStyle = styled.div<Props>`
+const DefaultTile = styled.div`
   width:65px;
   height:65px;
-  font-size:1vmax;
   border-radius:5px;
   text-align:center;
   display:flex;
   justify-content:center;
   align-items:center;
+`;
 
+const BackgroundTile = styled(DefaultTile)`
+  position:relative;
+  background: '#272626';
+  box-shadow: inset 3px 3px 24px #1f1e1e,
+              inset -3px -3px 16px #2f2e2e;
+`;
+
+const RealTile = styled(DefaultTile) <Partial<Props>>`
+  position:absolute;
   background: ${({ value }) => value === 0 ? '#272626' : tileData[value].backColor};
   box-shadow: ${({ value }) => value === 0 ?
     `inset 3px 3px 24px #1f1e1e,
@@ -31,21 +42,25 @@ const CellStyle = styled.div<Props>`
   }
 `;
 
-export default forwardRef(function Tile({
+export default function Tile({
   value,
-  children }: Props,
-  ref: React.Ref<HTMLDivElement>
+  distance }: Props
+  // ref: React.Ref<HTMLDivElement>
 ): JSX.Element {
 
+  const ref = useRef(null);
+
   return (
-    <>
-      <CellStyle
-        ref={ref}
-        className={'cell'}
-        value={value}
-      >
-        {children}
-      </CellStyle>
-    </>
+    <BackgroundTile
+      className={'cell'}
+    >
+      {value !== 0 &&
+        <RealTile
+          ref={ref}
+          value={value}
+        >
+          {value}
+        </RealTile>}
+    </BackgroundTile >
   )
-})
+}

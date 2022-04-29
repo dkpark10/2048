@@ -63,7 +63,7 @@ describe("2048 Game Test", () => {
       if (cells.item(i).textContent === '') {
         if (lockBoard[y][x] !== 0)
           isSamgeBoard = false;
-          break;
+        break;
       }
     }
 
