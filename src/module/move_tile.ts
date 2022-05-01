@@ -1,6 +1,4 @@
-import { moveTile } from "./tile_handler";
-
-export interface ITileResult {
+export interface NewTileResult {
   board: number[][];
   score: number;
 }
@@ -17,7 +15,7 @@ export default abstract class TileHandler {
     this.newBoard = Array.from({ length: 4 }, (v, i) => new Array(4).fill(0));
   }
 
-  public getResult(): ITileResult {
+  public getResult(): NewTileResult {
     return {
       board: this.newBoard,
       score: this.score

@@ -2,7 +2,7 @@ import UpMoveTileHandler from './move_tile_up';
 import DownMoveTileHandler from './move_tile_down';
 import LeftMoveTileHandler from './move_tile_left';
 import RightMoveTileHandler from './move_tile_right';
-import { ITileResult } from './move_tile';
+import { NewTileResult } from './move_tile';
 
 const BOARD_SIZE = 4 as const;
 
@@ -77,7 +77,7 @@ const makeTile = (board: number[][], cnt: number) => {
   }
 }
 
-const moveTile = (board: number[][], dir: string): ITileResult => {
+const moveTile = (board: number[][], dir: string): NewTileResult => {
 
   switch (dir) {
     case 'ArrowRight':
