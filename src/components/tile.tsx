@@ -1,12 +1,9 @@
-import React, { useRef, forwardRef, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import tileData from '../module/tile_color';
-import { Timeline, Tween } from 'react-gsap';
-import { MoveTileInfo } from '../module/move_tile';
 
 interface Props {
   value: number;
-  distance: MoveTileInfo;
 }
 
 const DefaultTile = styled.div`
@@ -28,27 +25,20 @@ const BackgroundTile = styled(DefaultTile)`
 
 const RealTile = styled(DefaultTile) <Partial<Props>>`
   position:absolute;
-  background: ${({ value }) => value === 0 ? '#272626' : tileData[value].backColor};
-  box-shadow: ${({ value }) => value === 0 ?
-    `inset 3px 3px 24px #1f1e1e,
-    inset -3px -3px 16px #2f2e2e`
-    : tileData[value].shadow
-  };
+  background: ${({ value }) => tileData[value].backColor};
+  box-shadow: ${({ value }) => tileData[value].shadow};
 
   & {
     color:white;
-    font-size:${({ value }) => value === 0 ? '1.0rem' : tileData[value].fontSize};
+    font-size:${({ value }) => tileData[value].fontSize};
     font-weight:bold;
   }
 `;
 
 export default function Tile({
-  value,
-  distance }: Props
-  // ref: React.Ref<HTMLDivElement>
+  value
+}: Props
 ): JSX.Element {
-
-  const ref = useRef(null);
 
   return (
     <BackgroundTile
@@ -56,7 +46,6 @@ export default function Tile({
     >
       {value !== 0 &&
         <RealTile
-          ref={ref}
           value={value}
         >
           {value}

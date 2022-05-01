@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { makeTile, moveTile, isGameOver, isFullBoard } from '../module/tile_handler';
-import { ITileResult, MoveTileInfo } from '../module/move_tile';
+import { ITileResult } from '../module/move_tile';
 
 import Tile from './tile';
 import NewGameButton from './newgame';
@@ -10,7 +10,6 @@ import Modal from './modal';
 
 interface Props {
   initBoard: number[][];
-  initDistance: MoveTileInfo[][];
 }
 
 const Wrapper2048 = styled.main`
@@ -33,14 +32,12 @@ const BoardWrapper = styled.div`
 `;
 
 export default function Game2048({
-  initBoard,
-  initDistance
+  initBoard
 }: Props) {
 
   const [board, setBoard] = useState<number[][]>(initBoard);
   const [score, setScore] = useState<number>(0);
   const [gameOver, setGameOver] = useState<boolean>(false);
-  const [moveTileDistance, setMoveTileDistance] = useState<MoveTileInfo[][]>(initDistance);
 
   const ref = useRef(null);
   useEffect(() => {
@@ -61,7 +58,6 @@ export default function Game2048({
     if (JSON.stringify(result.board) !== JSON.stringify(board)) {
       makeTile(result.board, 1);
       setBoard([...result.board]);
-      setMoveTileDistance([...result.moveInfo]);
       setScore(prev => prev + result.score);
 
       if (isFullBoard(result.board) && isGameOver(result.board)) {
@@ -92,7 +88,6 @@ export default function Game2048({
                 <Tile
                   key={rowidx * 4 + colidx}
                   value={value}
-                  distance={moveTileDistance[rowidx][colidx]}
                 />
               )
             })

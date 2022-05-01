@@ -8,14 +8,7 @@ export default class UpMoveTileHandler extends TileHandler {
 
   public move(): this {
 
-    const rotatedOrigin = this.rotate270(this.origin);
     for (let row = 0; row < this.BOARD_SIZE; row++) {
-
-      // 북쪽 이동거리 계산은 왼쪽으로 돌려서 계산 후 다시 오른쪽
-      const moveDistance = this.calculMoveDistance(rotatedOrigin[row], row);
-      moveDistance.forEach((distance, col) => {
-        this.moveTileInfo[col][this.BOARD_SIZE - 1 - row].y = -1 * distance;
-      });
 
       const tmp: number[] = [];
       for (let col = 0; col < this.BOARD_SIZE; col++) {

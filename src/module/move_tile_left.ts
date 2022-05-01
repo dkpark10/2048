@@ -9,11 +9,6 @@ export default class LeftMoveTileHandler extends TileHandler {
   public move(): this {
     for (let row = 0; row < this.BOARD_SIZE; row++) {
 
-      const moveDistance = this.calculMoveDistance(this.origin[row], row);
-      moveDistance.forEach((distance, col) => {
-        this.moveTileInfo[row][col].x = -1 * distance;
-      });
-
       const tmp: number[] = [];
       for (let col = 0; col < this.BOARD_SIZE; col++) {
         if (this.origin[row][col] !== 0) {

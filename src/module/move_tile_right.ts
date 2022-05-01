@@ -8,14 +8,7 @@ export default class RightMoveTileHandler extends TileHandler {
 
   public move(): this {
 
-    const turnedBoard = this.turnSide(this.origin);
     for (let row = 0; row < this.BOARD_SIZE; row++) {
-
-      // 오른쪽 이동거리 계산은 옆으로 뒤집고 계산 나온 결과값을 다시 뒤집어야 한다.
-      const moveDistance = this.calculMoveDistance(turnedBoard[row], row);
-      moveDistance.reverse().forEach((distance, col) => {
-        this.moveTileInfo[row][col].x = distance;
-      });
 
       const tmp: number[] = [];
       for (let col = this.BOARD_SIZE - 1; col >= 0; col--) {
