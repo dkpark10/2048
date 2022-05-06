@@ -53,9 +53,13 @@ const getInitValue = () => {
   return Math.floor(Math.random() * 15) < 14 ? 2 : 4;
 }
 
-const makeTile = (board: number[][], cnt: number) => {
+type NewTile = { y: number, x: number, value: number };
+
+const makeTile = (board: number[][], cnt: number):NewTile[] => {
 
   const noTileList: number[] = [];
+  const result: NewTile[] = [];
+
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       if (board[i][j] === 0) {
@@ -71,10 +75,16 @@ const makeTile = (board: number[][], cnt: number) => {
     const newX = noTileList[newTileIndex] % BOARD_SIZE;
 
     if (board[newY][newX] === 0) {
-      board[newY][newX] = getInitValue();
+      result.push({
+        y: newY,
+        x: newX,
+        value: getInitValue()
+      })
       cnt--;
     }
   }
+
+  return result;
 }
 
 const moveTile = (board: number[][], dir: string): NewTileResult => {

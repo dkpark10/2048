@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import tileData from '../module/tile_color';
+import { AnimationTile } from '../module/animation_calcul';
+import { Tween, Timeline } from 'react-gsap';
 
 interface Props {
-  value: number;
+  data: AnimationTile;
+  moveX?: number;
 }
 
 const DefaultTile = styled.div`
@@ -23,7 +26,8 @@ const BackgroundTile = styled(DefaultTile)`
               inset -3px -3px 16px #2f2e2e;
 `;
 
-const RealTile = styled(DefaultTile) <Partial<Props>>`
+const RealTile = styled(DefaultTile) <Partial<AnimationTile>>`
+  z-index: 1;
   position:absolute;
   background: ${({ value }) => tileData[value].backColor};
   box-shadow: ${({ value }) => tileData[value].shadow};
@@ -36,20 +40,57 @@ const RealTile = styled(DefaultTile) <Partial<Props>>`
 `;
 
 export default function Tile({
-  value
-}: Props
-): JSX.Element {
+  data,
+  moveX
+}: Props): JSX.Element {
+
+  const [active, setActive] = useState<boolean>(true);
+  const { x, y, isDelete, isNew, value } = data;
+  const ref = useRef(null);
+
+  useEffect(() => {
+    setActive(true);
+    return (() => ref.current = null)
+  }, [x, y, value, isDelete, isNew]);
 
   return (
     <BackgroundTile
       className={'cell'}
     >
-      {value !== 0 &&
-        <RealTile
-          value={value}
-        >
-          {value}
-        </RealTile>}
+      {value !== 0 && active && (
+        <Timeline target={
+          <RealTile
+            className='hidden'
+            value={value}
+            ref={ref}
+          >
+            {value}
+          </RealTile>
+        }>
+          <Tween
+            opacity={isDelete === true ? 0 : 1}
+            to={{
+              x: x * 71,
+              y: y * 71
+            }}
+            duration={0.4}
+            onCompelete={() => setActive(isDelete === true ? false : true)}
+          />
+        </Timeline>
+      )}
+      {isNew && value !== 0 &&
+        <Timeline target={
+          <RealTile
+            className='new_tile'
+            value={value}
+          >
+            {value}
+          </RealTile>
+        }>
+          <Tween to={{ scaleX: 1.2, scaleY: 1.2 }} duration={0.2} />
+          <Tween to={{ scaleX: 1.0, scaleY: 1.0 }} duration={0.2} />
+        </Timeline>
+      }
     </BackgroundTile >
   )
 }

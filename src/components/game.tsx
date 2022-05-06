@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { makeTile, moveTile, isGameOver, isFullBoard } from '../module/tile_handler';
-import { distanceCalculator, AnimationTile } from '../module/animation_calcul';
+import { calculMoveDistance, AnimationTile } from '../module/animation_calcul';
 import { NewTileResult } from '../module/move_tile';
 
 import Tile from './tile';
@@ -35,6 +35,8 @@ export default function Game2048(): JSX.Element {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [animationTile, setAnimationTile] = useState<AnimationTile[][]>([]);
 
+  const [test, setTest] = useState<number>(0);
+
   const keyDown = (e: React.KeyboardEvent) => {
 
     if (e.key !== 'ArrowRight' &&
@@ -44,18 +46,28 @@ export default function Game2048(): JSX.Element {
       return;
     }
 
-    const result: NewTileResult = moveTile(board.current, e.key);
-    const animationTile = distanceCalculator({
+    const newTileResult: NewTileResult = moveTile(board.current, e.key);
+    const animationTile: AnimationTile[][] = calculMoveDistance({
       prev:board.current,
-      next:result.board
+      next:newTileResult.board
     },e.key);
 
-    if (JSON.stringify(result.board) !== JSON.stringify(board.current)) {
-      makeTile(result.board, 1);
-      board.current = result.board;
-      setScore(prev => prev + result.score);
+    if (JSON.stringify(newTileResult.board) !== JSON.stringify(board.current)) {
 
-      if (isFullBoard(result.board) && isGameOver(result.board)) {
+      // 새 좌표와 값 리스트를 리턴
+      const newTileData = makeTile(newTileResult.board, 1);
+      newTileData.forEach(element => {
+        const { y, x, value } = element;
+        newTileResult.board[y][x] = value;
+        animationTile[y][x].value = value;
+        animationTile[y][x].isNew = true;
+      })
+
+      board.current = newTileResult.board;
+      setScore(prev => prev + newTileResult.score);
+      setAnimationTile(animationTile);
+
+      if (isFullBoard(newTileResult.board) && isGameOver(newTileResult.board)) {
         setGameOver(true);
       }
     }
@@ -66,15 +78,30 @@ export default function Game2048(): JSX.Element {
     setScore(0);
 
     const init = Array.from(Array(4), () => Array(4).fill(0));
-    makeTile(init, 2);
+    const newTileData = makeTile(init, 2);
+    newTileData.forEach(element => {
+      const { y, x, value } = element;
+      init[y][x] = value;
+    })
+
     board.current = init;
 
-    const initAnimationTile: AnimationTile[][] = Array.from({ length: 4 },
-      (_, row) => Array.from({ length: 4 }, (_, col) => ({
+    const test = [
+      [2,2,2,2],
+      [2,2,2,2],
+      [2,2,2,2],
+      [2,2,2,2]
+    ];
+    board.current = init;
+
+    const length = 4;
+    const initAnimationTile: AnimationTile[][] = Array.from({ length },
+      (_, row) => Array.from({ length }, (_, col) => ({
         y: 0,
         x: 0,
         value: init[row][col],
-        isDelete: false
+        isDelete: false,
+        isNew: false
       })));
 
     setAnimationTile(initAnimationTile);
@@ -90,10 +117,10 @@ export default function Game2048(): JSX.Element {
         <Score score={score} />
         <BoardWrapper >
           {animationTile.map((row, rowidx) =>
-            row.map((item, colidx) =>
+            row.map((data, colidx) =>
               <Tile
                 key={rowidx * 4 + colidx}
-                value={item.value}
+                data={data}
               />
             )
           )}
