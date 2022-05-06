@@ -6,7 +6,7 @@ import { Tween, Timeline } from 'react-gsap';
 
 interface Props {
   data: AnimationTile;
-  moveX?: number;
+  newValue: number;
 }
 
 const DefaultTile = styled.div`
@@ -41,7 +41,7 @@ const RealTile = styled(DefaultTile) <Partial<AnimationTile>>`
 
 export default function Tile({
   data,
-  moveX
+  newValue
 }: Props): JSX.Element {
 
   const [active, setActive] = useState<boolean>(true);
@@ -73,22 +73,22 @@ export default function Tile({
               x: x * 71,
               y: y * 71
             }}
-            duration={0.4}
+            duration={0.2}
             onCompelete={() => setActive(isDelete === true ? false : true)}
           />
         </Timeline>
       )}
-      {isNew && value !== 0 &&
+      {isNew && newValue !== 0 &&
         <Timeline target={
           <RealTile
             className='new_tile'
-            value={value}
+            value={newValue}
           >
-            {value}
+            {newValue}
           </RealTile>
         }>
-          <Tween to={{ scaleX: 1.2, scaleY: 1.2 }} duration={0.2} />
-          <Tween to={{ scaleX: 1.0, scaleY: 1.0 }} duration={0.2} />
+          <Tween to={{ scaleX: 1.2, scaleY: 1.2 }} duration={0.1} />
+          <Tween to={{ scaleX: 1.0, scaleY: 1.0 }} duration={0.1} />
         </Timeline>
       }
     </BackgroundTile >

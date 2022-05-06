@@ -59,7 +59,7 @@ export default function Game2048(): JSX.Element {
       newTileData.forEach(element => {
         const { y, x, value } = element;
         newTileResult.board[y][x] = value;
-        animationTile[y][x].value = value;
+        animationTile[y][x].value = value;  
         animationTile[y][x].isNew = true;
       })
 
@@ -84,14 +84,6 @@ export default function Game2048(): JSX.Element {
       init[y][x] = value;
     })
 
-    board.current = init;
-
-    const test = [
-      [2,2,2,2],
-      [2,2,2,2],
-      [2,2,2,2],
-      [2,2,2,2]
-    ];
     board.current = init;
 
     const length = 4;
@@ -121,6 +113,7 @@ export default function Game2048(): JSX.Element {
               <Tile
                 key={rowidx * 4 + colidx}
                 data={data}
+                newValue={board.current[rowidx][colidx]}
               />
             )
           )}
