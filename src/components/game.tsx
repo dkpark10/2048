@@ -99,11 +99,11 @@ export default function Game2048({ initBoard }: Props) {
           onReset={() => initialze(Array.from(Array(4), () => Array(4).fill(0)))}
         />
       </Wrapper2048>
-      <Modal
-        isGameOver={gameOver}
-        resetClick={() => initialze(Array.from(Array(4), () => Array(4).fill(0)))}
-        score={score}
-      />
+      {gameOver &&
+        <Modal
+          score={score}
+        />
+      }
     </>
   )
 }

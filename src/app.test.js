@@ -1,11 +1,10 @@
 import React from 'react';
 import "@testing-library/jest-dom/extend-expect";
 import '@testing-library/jest-dom';
-import { render, fireEvent, screen, waitFor } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
 import Game2048 from './components/game';
 
 describe("2048 Game Test", () => {
-
   const initBoard = [
     [2, 4, 8, 16],
     [0, 0, 0, 0],
@@ -28,7 +27,6 @@ describe("2048 Game Test", () => {
   ];
 
   test("새 게임 버튼 테스트", async () => {
-
     const result = render(<Game2048 initBoard={initBoard} />);
     const cells = result.container.getElementsByClassName('cell');
     const inputButton = result.getByText('New Game');
@@ -46,7 +44,6 @@ describe("2048 Game Test", () => {
   });
 
   test("움직일 곳이 없는 테스트", async () => {
-
     const result = render(<Game2048 initBoard={lockBoard} />);
     const cells = result.container.getElementsByClassName('cell');
     const inputButton = result.getByText('New Game');
@@ -55,23 +52,22 @@ describe("2048 Game Test", () => {
     fireEvent.keyDown(inputButton, { key: 'ArrowLeft' });
     fireEvent.keyDown(inputButton, { key: 'ArrowUp' });
 
-    let isSamgeBoard = true;
+    let isSameBoard = true;
 
     for (let i = 0; i < 16; i++) {
       const y = Math.floor(i / 4);
       const x = i % 4;
       if (cells.item(i).textContent === '') {
         if (lockBoard[y][x] !== 0)
-          isSamgeBoard = false;
+        isSameBoard = false;
           break;
       }
     }
 
-    expect(isSamgeBoard).toBe(true);
+    expect(isSameBoard).toBe(true);
   });
 
   test("게임오버 테스트", async () => {
-
     const result = render(<Game2048 initBoard={gameOverBoard} />);
     const inputButton = result.getByText('New Game');
 

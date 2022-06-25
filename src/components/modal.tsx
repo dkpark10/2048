@@ -2,17 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface IModal {
-  resetClick: () => void;
   score: number;
-  isGameOver: boolean;
 }
 
 const StyleModal = styled.div<Partial<IModal>>`
-  display : ${({ isGameOver }) => {
-    return isGameOver === true ? 'flex' : 'none';
-  }};
   justify-content:center;
-  align-items;
+  align-items: center;
   width:100%;
   z-index: 1;
   height:100%;
@@ -33,20 +28,15 @@ const StyleModal = styled.div<Partial<IModal>>`
   }
 `;
 
-// #fb8500;
-
-export default function Modal({ resetClick, score, isGameOver }: IModal) {
+export default function Modal({ score }: IModal) {
   return (
-    <>
-      <StyleModal
-        className='modal'
-        isGameOver={isGameOver}
-      >
-        <div className='modal_content'>
-          <h3>Game Over</h3>
-          <h1 style={{ color: '#fb8500' }}>{score}</h1>
-        </div>
-      </StyleModal>
-    </>
+    <StyleModal
+      className='modal'
+    >
+      <div className='modal_content'>
+        <h3>Game Over</h3>
+        <h1 style={{ color: '#fb8500' }}>{score}</h1>
+      </div>
+    </StyleModal>
   )
 }
