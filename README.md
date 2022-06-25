@@ -1,23 +1,10 @@
-# webpack + typescript + react 기본설정
+# 2048 
 
 
 
-### devDependencies
+### [게임링크](https://dkpark10.github.io/2048/)
 
 
 
+![2048img](https://user-images.githubusercontent.com/43857226/167085136-cd6de7f6-9091-435c-b0b1-1ecd684e30b1.PNG)
 
-`npm i --save-dev   @babel/core @babel/preset-env @babel/preset-react @babel/preset-typescript @types/react @types/react-dom
-@types/react-redux @types/react-router-dom @types/styled-components babel-loader css-loader fork-ts-checker-webpack-plugin html-webpack-plugin rimraf style-loader
-ts-loader typescript webpack webpack-cli webpack-dev-server @testing-library/react
-@testing-library/jest-dom @testing-library/user-event
-
-`
-
-
-### dependencies
-
-
-
-`npm i --save axios express react react-dom react-redux react-router-dom redux styled-components @babel/runtime babel-plugin-transform-export-extensions
-`

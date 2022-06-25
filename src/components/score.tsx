@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyleScore = styled.div`
+const StyleScore = styled.header`
   font-size:1.8rem;
   color: #fb8500;
   text-align:center;
@@ -9,11 +9,11 @@ const StyleScore = styled.div`
   margin-bottom: 20px;
 `;
 
-interface IScore{
+interface Props{
   score: number;
 }
 
-export default function Score({ score }: IScore) {
+export default function Score({ score }: Props) {
   return(
     <>
       <StyleScore>

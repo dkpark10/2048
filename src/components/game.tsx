@@ -1,22 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { makeTile, moveTile, isGameOver, isFullBoard } from '../module/tile_handler';
-import { ITileResult } from '../module/move_tile';
+import { calculMoveDistance, AnimationTile } from '../module/animation_calcul';
+import { NewTileResult } from '../module/move_tile';
 
 import Tile from './tile';
 import NewGameButton from './newgame';
 import Score from './score';
 import Modal from './modal';
 
-const Wrapper2048 = styled.div`
+const Wrapper2048 = styled.main`
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  padding:20px;
+  border-radius:6px;
   background-color: #2e2d2d;
   box-shadow: 4px 4px 10px #272626;
-  border-radius:6px;
-  padding:20px;
 `;
 
 const BoardWrapper = styled.div`
@@ -27,20 +28,14 @@ const BoardWrapper = styled.div`
   gap: 6px;
 `;
 
-interface Props {
-  initBoard: number[][];
-}
+export default function Game2048(): JSX.Element {
 
-export default function Game2048({ initBoard }: Props) {
-
-  const [board, setBoard] = useState<number[][]>(initBoard);
+  const board = useRef<number[][]>([]);
   const [score, setScore] = useState<number>(0);
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [animationTile, setAnimationTile] = useState<AnimationTile[][]>([]);
 
-  const ref = useRef(null);
-  useEffect(() => {
-    return (() => ref.current = null)
-  })
+  const [test, setTest] = useState<number>(0);
 
   const keyDown = (e: React.KeyboardEvent) => {
 
@@ -51,28 +46,61 @@ export default function Game2048({ initBoard }: Props) {
       return;
     }
 
-    const result: ITileResult = moveTile(board, e.key);
+    const newTileResult: NewTileResult = moveTile(board.current, e.key);
+    const animationTile: AnimationTile[][] = calculMoveDistance({
+      prev:board.current,
+      next:newTileResult.board
+    },e.key);
 
-    if (JSON.stringify(result.board) !== JSON.stringify(board)) {
-      makeTile(result.board, 1);
-      setBoard([...result.board]);
-      setScore(prev => prev + result.score);
+    if (JSON.stringify(newTileResult.board) !== JSON.stringify(board.current)) {
 
-      if (isFullBoard(result.board) && isGameOver(result.board)) {
+      // 새 좌표와 값 리스트를 리턴
+      const newTileData = makeTile(newTileResult.board, 1);
+      newTileData.forEach(element => {
+        const { y, x, value } = element;
+        newTileResult.board[y][x] = value;
+        animationTile[y][x].value = value;  
+        animationTile[y][x].isNew = true;
+      })
+
+      board.current = newTileResult.board;
+      setScore(prev => prev + newTileResult.score);
+      setAnimationTile(animationTile);
+
+      if (isFullBoard(newTileResult.board) && isGameOver(newTileResult.board)) {
         setGameOver(true);
       }
     }
   }
 
-  const initialze = (boardParam: number[][]) => {
-    makeTile(boardParam, 2);
-    setBoard([...boardParam]);
+  const initialze = () => {
     setGameOver(false);
     setScore(0);
+
+    const init = Array.from(Array(4), () => Array(4).fill(0));
+    const newTileData = makeTile(init, 2);
+    newTileData.forEach(element => {
+      const { y, x, value } = element;
+      init[y][x] = value;
+    })
+
+    board.current = init;
+
+    const length = 4;
+    const initAnimationTile: AnimationTile[][] = Array.from({ length },
+      (_, row) => Array.from({ length }, (_, col) => ({
+        y: 0,
+        x: 0,
+        value: init[row][col],
+        isDelete: false,
+        isNew: false
+      })));
+
+    setAnimationTile(initAnimationTile);
   }
 
   useEffect(() => {
-    setBoard([...board]);
+    initialze();
   }, [])
 
   return (
@@ -80,23 +108,19 @@ export default function Game2048({ initBoard }: Props) {
       <Wrapper2048>
         <Score score={score} />
         <BoardWrapper >
-          {board.map((row, rowIdx) => {
-            return row.map((value, colIdx) => {
-              return (
-                <Tile
-                  ref={ref}
-                  key={rowIdx * 4 + colIdx}
-                  value={value}
-                >
-                  {value !== 0 ? value : ''}
-                </Tile>
-              )
-            })
-          })}
+          {animationTile.map((row, rowidx) =>
+            row.map((data, colidx) =>
+              <Tile
+                key={rowidx * 4 + colidx}
+                data={data}
+                newValue={board.current[rowidx][colidx]}
+              />
+            )
+          )}
         </BoardWrapper>
         <NewGameButton
           onKeyDown={(e: React.KeyboardEvent) => keyDown(e)}
-          onReset={() => initialze(Array.from(Array(4), () => Array(4).fill(0)))}
+          onReset={initialze}
         />
       </Wrapper2048>
       {gameOver &&
